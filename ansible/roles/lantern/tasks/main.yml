@@ -101,6 +101,7 @@
         --listen-address /ip4/0.0.0.0/udp/{{ lantern_quic_port }}/quic-v1
         --metrics-port {{ lantern_metrics_port }}
         --http-port 5055
+        --log-level debug
         --hash-sig-key-dir /config/hash-sig-keys
       register: lantern_container
       changed_when: lantern_container.rc == 0
