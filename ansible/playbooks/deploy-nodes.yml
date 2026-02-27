@@ -202,7 +202,7 @@
       include_role:
         name: common
       vars:
-        node_names: "{{ [inventory_hostname] }}"
+        common_node_names: "{{ [inventory_hostname] }}"
       tags:
         - setup
         - deploy
