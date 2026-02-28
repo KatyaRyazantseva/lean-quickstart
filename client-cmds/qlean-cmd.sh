@@ -4,19 +4,6 @@
 # expects "qlean" submodule or symlink inside "lean-quickstart" root directory
 # https://github.com/qdrvm/qlean-mini
 
-# Platform-specific qlean image
-ARCH=$(uname -m)
-# if [ "$ARCH" = "x86_64" ]; then
-#     QLEAN_IMAGE="qdrvm/qlean-mini:devnet-3-amd64"
-# elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-#     QLEAN_IMAGE="qdrvm/qlean-mini:devnet-3-arm64"
-# else
-#     echo "Unsupported architecture: $ARCH"
-#     exit 1
-# fi
-
-QLEAN_IMAGE="qdrvm/qlean-mini:devnet-3"
-
 # Set aggregator flag based on isAggregator value
 aggregator_flag=""
 if [ "$isAggregator" == "true" ]; then

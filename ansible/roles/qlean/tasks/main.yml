@@ -4,9 +4,10 @@
 
 - name: Extract docker image from client-cmd.sh
   shell: |
-    # Extract the docker image from QLEAN_IMAGE line
+    # Extract the first word (docker image) from node_docker line
+    # playbook_dir points to ansible/playbooks, go up two levels to reach project root
     project_root="$(cd '{{ playbook_dir }}/../..' && pwd)"
-    grep -E '^QLEAN_IMAGE=' "$project_root/client-cmds/qlean-cmd.sh" | head -1 | sed -E 's/.*QLEAN_IMAGE="([^"]+)".*/\1/'
+    grep -E '^node_docker=' "$project_root/client-cmds/qlean-cmd.sh" | head -1 | sed -E 's/.*node_docker="([^"]+)".*/\1/'
   register: qlean_docker_image_raw
   changed_when: false
   delegate_to: localhost
@@ -94,6 +95,7 @@
         --name {{ node_name }}
         --restart unless-stopped
         --network host
+        --platform {{ qlean_docker_platform }}
         {{ '--init --ulimit core=-1 --workdir /data' if (enable_core_dumps | default('') == 'all') or (node_name in (enable_core_dumps | default('')).split(',')) or (node_name.split('_')[0] in (enable_core_dumps | default('')).split(',')) else '' }}
         -v {{ genesis_dir }}:/config:ro
         -v {{ data_dir }}/{{ node_name }}:/data
@@ -108,10 +110,7 @@
         --node-id {{ node_name }}
         --node-key /config/{{ node_name }}.key
         --listen-addr /ip4/0.0.0.0/udp/{{ qlean_quic_port }}/quic-v1
-        --metrics-host 0.0.0.0
-        --metrics-port {{ qlean_metrics_port }}
-        --api-host 0.0.0.0
-        --api-port 5055
+        --prometheus-port {{ qlean_metrics_port }}
         {{ '--is-aggregator' if (qlean_is_aggregator | default('false')) == 'true' else '' }}
         -ldebug
       register: qlean_container
