@@ -89,4 +89,3 @@ validators:
     metricsPort: 9095
     isAggregator: false
     count: 1
-
