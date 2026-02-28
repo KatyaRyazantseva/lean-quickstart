@@ -7,7 +7,7 @@
     # Extract the first word (docker image) from node_docker line
     # playbook_dir points to ansible/playbooks, go up two levels to reach project root
     project_root="$(cd '{{ playbook_dir }}/../..' && pwd)"
-    grep -E '^node_docker=' "$project_root/client-cmds/qlean-cmd.sh" | head -1 | sed -E 's/.*node_docker="([^"]+)".*/\1/'
+    grep -E '^node_docker=' "$project_root/client-cmds/qlean-cmd.sh" | head -1 | sed -E 's/.*node_docker="([^ "]+).*/\1/'
   register: qlean_docker_image_raw
   changed_when: false
   delegate_to: localhost
@@ -111,7 +111,6 @@
         --node-key /config/{{ node_name }}.key
         --listen-addr /ip4/0.0.0.0/udp/{{ qlean_quic_port }}/quic-v1
         --prometheus-port {{ qlean_metrics_port }}
-        {{ '--is-aggregator' if (qlean_is_aggregator | default('false')) == 'true' else '' }}
         -ldebug
       register: qlean_container
       changed_when: qlean_container.rc == 0
